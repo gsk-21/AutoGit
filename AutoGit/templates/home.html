@@ -10,6 +10,15 @@
 
 
 
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 <div class="container mt-5 text-black">
 
     <div class="row ">
@@ -38,8 +47,7 @@
                 " 
                 style="border-radius: 10px;">
                     <div class="col-3 font-weight-bold {% if project.default %}text-success{% endif %}">
-                        {{project.title}}  - 
-                        {{project.datetime|naturalday}} 
+                        {{project.title}}  
                     </div>
                     <div class="col-3">
                         {{project.branch_name | title}}
@@ -60,14 +68,15 @@
         <div class="col-5 bg-dangers container">
 
             <div class="container">
-                <div  class="row bg-light bg-darks p-3 text-blacks " style="border-radius: 10px;position: fixed;">
+                <div  class="row bg-light  bg-darks p-3 text-blacks " 
+                style="border-radius: 10px;position: fixed;">
 
                 
-                        <div class="chat-box-header text-black font-weight-bold" style="background: none;">
+                        <div class="chat-box-header text-black font-weight-bold " style="background: none;">
                           AutoGit
         
                         </div>
-                        <div class="chat-box-body">
+                        <div class="chat-box-body bg-successs">
                           <div class="chat-box-overlay">   
                           </div>
                           <div class="chat-logs">
@@ -75,7 +84,7 @@
                           </div><!--chat-log -->
                         </div>
 
-                          <form>
+                          <form hidden>
                             <input type="text" id="chat-input" placeholder="Send a message..."/>
                           <button type="submit" class="chat-submit" id="chat-submit">
                             <i class="fas fa-arrow-right"></i>
@@ -83,10 +92,9 @@
                           </form>      
 
 
-                      
-                      
-                      
-                      
+                          <div class="d-flex justify-content-center align-items-center" style="height:100px;">
+                            <input type="button" class="btn btn-primary" onclick="startArtyom()" value="start voice Command"/><br>  
+                        </div>
 
 
                 </div>
@@ -100,5 +108,7 @@
 
 
 </div>
+
+
 
 {% endblock content %}
