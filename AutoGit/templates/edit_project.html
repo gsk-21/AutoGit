@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+
+<br><br>
+<div class="container w-50" >
+
+
+    <center>
+        <h2>
+            Project Details
+            <br><br>
+        </h2>
+    </center>
+
+
+    <form>
+
+        <div class="form-group">
+          <input  class="form-control bg-darks text-whites" id="title"  placeholder="Title"
+          value="{{project.title}}"
+          required>
+
+        </div>
+
+        <br><br>
+
+        <div class="form-group">
+            <input class="form-control bg-darks text-whites" id="directory"  placeholder="Directory" 
+            value="{{project.directory}}"
+            required>
+
+          </div>
+
+          <br><br>
+
+        <div class="form-group">
+            <input  class="form-control bg-darks text-whites" id="branch" placeholder="Branch" 
+            value="{{project.branch_name}}"
+            required>
+
+          </div>
+
+          <br><br>
+
+          <div class="form-group">
+            <div class="form-group form-check ">
+                
+                <input class="form-control bg-darks text-whites" type="time" id="autocommit_time">
+            </div>
+          </div>
+
+        <br><br>
+
+        <div class="form-group form-check ">
+          <input type="checkbox" class="form-check-input" id="default" checked>
+
+          <label class="form-check-label" for="exampleCheck1">Default branch</label>
+        </div>
+
+        <br><br>
+
+        <div class="form-group form-check ">
+            <input type="checkbox" class="form-check-input" id="autocommit" checked>
+
+            <label class="form-check-label" for="exampleCheck1">Auto commit</label>
+        </div>
+  
+
+        <br><br>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+
+      </form>
+</div>
+
+
+
+
+<script>
+    
+    $("#default").prop('checked', "{{project.default}}");
+
+    $("#autocommit").prop('checked',"{{project.autocommit}}");
+
+    var date = new Date();
+    var currentTime = date.toISOString().substring(11,16);
+    document.getElementById('autocommit_time').value = currentTime;
+
+
+
+    var submitBtn = document.querySelector('#submit-btn')
+
+    $('#submit-btn').on('click',function(event){
+
+
+        event.preventDefault();
+
+        var title = document.querySelector("#title").value
+        var directory = document.querySelector("#directory").value
+        var branch = document.querySelector("#branch").value
+        var defaultBranch = document.querySelector("#default").checked
+        var autoCommit = document.querySelector("#autocommit").checked
+        var autocommitTime = document.querySelector("#autocommit_time").value
+        
+        var id = "{{project.id}}"
+
+        submitBtn.disabled = true
+        submitBtn.textContent = "Adding Project.."
+
+        console.log("TIME:",autocommitTime);
+
+        console.log(title, directory, branch, defaultBranch,autoCommit,autocommitTime,id);
+
+        add_project(title, directory, branch, defaultBranch,autoCommit,autocommitTime,id)
+
+        title=''
+        directory=''
+        branch=''
+        defaultBranch=''
+
+
+    })
+
+
+    function add_project(title, directory, branch, defaultBranch,autoCommit,autocommitTime,id) {
+
+        $.ajax({
+            headers: { "X-CSRFToken": '{{csrf_token}}' },
+            url: "{% url 'update-project' %}",
+            type: "POST",
+            data: {
+                title:title,
+                directory:directory,
+                branch_name:branch,
+                default:defaultBranch,
+                autocommit:autoCommit,
+                autocommit_time:autocommitTime,
+                project_id:id
+            },
+
+            success: function (json) {
+                console.log(json);
+                location.href = "{% url 'home' %}"
+            },
+            error: function (xhr, errmsg, err) {
+                console.log("Error!")
+                console.log(xhr.status + ":" + xhr.responseText)
+            }
+
+        })
+        
+    }
+
+
+
+
+
+</script>
+
+
+
+
+{% endblock content %}

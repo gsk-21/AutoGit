@@ -6,116 +6,99 @@
 
 {% block content %}
 
-
-<br><br>
-<div class="container w-50" >
+{% include 'chatWindowStyle.html' %}
 
 
-    <center>
-        <h2>
-            Project Details
-            <br><br>
-        </h2>
-    </center>
 
-    <form>
+<div class="container mt-5 text-black">
 
-        <div class="form-group">
-          <input type="email" class="form-control" id="title"  placeholder="Title" required>
+    <div class="row ">
+
+        <div class="col-7">
+
+            <div class="row p-3 font-weight-bold">
+                <div class="col-3 ">
+                    <h5>Project</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Branch</h5>
+                </div>
+                <div class="col-6" >
+                    <h5>Directory</h5>
+                </div>
+            </div>
+
+        
+        {% for project in projects %}
+            
+        <!-- target="_blank" -->
+            <a href="{% url 'edit-project' id=project.id %}"  rel="noopener noreferrer">
+            
+                <div class="row bg-light bg-darks p-3 text-black text-whites 
+                " 
+                style="border-radius: 10px;">
+                    <div class="col-3 font-weight-bold {% if project.default %}text-success{% endif %}">
+                        {{project.title}}  - 
+                        {{project.datetime|naturalday}} 
+                    </div>
+                    <div class="col-3">
+                        {{project.branch_name | title}}
+                    </div>
+                    <div class="col-6" style="">
+                        {{project.directory|truncatechars:35 }}
+                    </div>
+                    
+                </div>
+            </a>
+
+            <div class="col-12 m-2"></div>
+
+        {% endfor %}
 
         </div>
 
-        <br><br>
+        <div class="col-5 bg-dangers container">
 
-        <div class="form-group">
-            <input type="email" class="form-control" id="directory"  placeholder="Directory" required>
-  
-          </div>
+            <div class="container">
+                <div  class="row bg-light bg-darks p-3 text-blacks " style="border-radius: 10px;position: fixed;">
 
-          <br><br>
+                
+                        <div class="chat-box-header text-black font-weight-bold" style="background: none;">
+                          AutoGit
+        
+                        </div>
+                        <div class="chat-box-body">
+                          <div class="chat-box-overlay">   
+                          </div>
+                          <div class="chat-logs">
+                           
+                          </div><!--chat-log -->
+                        </div>
 
-        <div class="form-group">
-            <input type="email" class="form-control" id="branch" placeholder="Branch" required>
-  
-          </div>
+                          <form>
+                            <input type="text" id="chat-input" placeholder="Send a message..."/>
+                          <button type="submit" class="chat-submit" id="chat-submit">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                          </form>      
 
-          <br><br>
 
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" id="default" >
-          <label class="form-check-label" for="exampleCheck1">Default branch</label>
+                      
+                      
+                      
+                      
+
+
+                </div>
+    
+            </div>
+
         </div>
 
-        <br><br>
+    </div>
 
-        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
 
-      </form>
+
 </div>
-
-
-<script>
-  
-
-
-    var submitBtn = document.querySelector('#submit-btn')
-
-    $('#submit-btn').on('click',function(event){
-
-
-        event.preventDefault();
-
-        var title = document.querySelector("#title").value
-        var directory = document.querySelector("#directory").value
-        var branch = document.querySelector("#branch").value
-        var defaultBranch = document.querySelector("#default").checked
-
-        submitBtn.disabled = true
-        submitBtn.textContent = "Adding Project.."
-
-        console.log(title," ",directory," ",branch," ",defaultBranch);
-        add_project(title, directory, branch, defaultBranch)
-        title=''
-        directory=''
-        branch='' 
-        defaultBranch=''
-
-        console.log(title," ",directory," ",branch," ",defaultBranch);
-
-    })
-
-
-    function add_project(title, directory, branch, defaultBranch) {
-
-        $.ajax({
-            headers: { "X-CSRFToken": '{{csrf_token}}' },
-            url: "{% url 'add-project' %}",
-            type: "POST",
-            data: {
-                title:title,
-                directory:directory,
-                branch_name:branch,
-                default:defaultBranch
-            },
-
-            success: function (json) {
-                console.log(json);
-                location.reload()
-            },
-            error: function (xhr, errmsg, err) {
-                console.log("Error!")
-                console.log(xhr.status + ":" + xhr.responseText)
-            }
-
-        })
-
-    }
-
-</script>
-
-
-
-
-
 
 {% endblock content %}

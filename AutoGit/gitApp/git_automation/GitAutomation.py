@@ -11,17 +11,17 @@ class Git:
         self.init_cmd = ['init']
 
         self.pull_cmd = ['pull']
-        self.pull_origin_cmd = ['pull','origin']
-        self.pull_upstream_cmd = ['pull','upstream']
+        self.pull_origin_cmd = ['pull', 'origin']
+        self.pull_upstream_cmd = ['pull', 'upstream']
 
         self.push_cmd = ['push']
-        self.push_origin_cmd = ['push','origin']
+        self.push_origin_cmd = ['push', 'origin']
 
         self.stash_cmd = ['stash']
-        self.stash_apply_cmd = ['stash','apply']
+        self.stash_apply_cmd = ['stash', 'apply']
 
         self.checkout_cmd = ['checkout']
-        self.checkout_new_cmd = ['checkout','-b']
+        self.checkout_new_cmd = ['checkout', '-b']
 
         self.add_all_cmd = ['add', '.']
 
@@ -38,16 +38,22 @@ class Git:
 
         # print("Project Directory:", self.project_directory)
 
-    def run_process(self, task):
+    def run_process(self, command):
         result = {'exit_code': None, 'stdout': None, 'stderr': None}
         try:
-            cmd = self.git + task
-            process = sp.Popen(cmd, stderr=PIPE, stdout=PIPE, cwd=self.project_directory)
+            process = sp.Popen(command, stderr=PIPE, stdout=PIPE, cwd=self.project_directory)
             stdout, stderr = process.communicate()
             exit_code = process.wait()
             result['exit_code'] = exit_code
-            result['stdout'] = stdout.decode('utf-8')
-            result['stderr'] = stderr.decode('utf-8')
+            result['stdout'] = str(stdout.decode('utf-8'))
+            result['stderr'] = str(stderr.decode('utf-8'))
+
+            # print("Command:", command)
+            #
+            # result['exit_code'] = 0
+            # result['stdout'] = "Success"
+            # result['stderr'] = "Failure"
+
         except Exception as e:
             print("Error Occured")
             print(e)
@@ -62,33 +68,30 @@ class Git:
         return self.run_process(init_cmd)
 
     def pull(self):
-        return self.run_process(self.pull_cmd)
+        return self.run_process(['pull'])
 
-    def pull_upstream(self,branchname):
+    def pull_upstream(self, branchname):
         self.pull_upstream_cmd.append(str(branchname))
         print(self.pull_upstream_cmd)
         op = self.run_process(self.pull_upstream_cmd)
         self.pull_upstream_cmd.pop()
         return op
 
-
-    def pull_origin(self,branchname):
+    def pull_origin(self, branchname):
         self.pull_origin_cmd.append(str(branchname))
         print(self.pull_origin_cmd)
         op = self.run_process(self.pull_origin_cmd)
         self.pull_origin_cmd.pop()
         return op
 
-
-    def checkout(self,branchname):
+    def checkout(self, branchname):
         self.checkout_cmd.append(str(branchname))
         print(self.checkout_cmd)
         op = self.run_process(self.checkout_cmd)
         self.checkout_cmd.pop()
         return op
 
-
-    def checkout_new(self,branchname):
+    def checkout_new(self, branchname):
         self.checkout_new_cmd.append(str(branchname))
         print(self.checkout_new_cmd)
         op = self.run_process(self.checkout_new_cmd)
@@ -98,7 +101,7 @@ class Git:
     def push(self):
         return self.run_process(self.push_cmd)
 
-    def push_origin(self,branchname):
+    def push_origin(self, branchname):
         self.push_origin_cmd.append((str(branchname)))
         print(self.push_origin_cmd)
         op = self.run_process(self.push_origin_cmd)
@@ -131,7 +134,7 @@ class Git:
     def status(self):
         return self.run_process(self.status_cmd)
 
-    def fetch_upstream(self,branchname):
+    def fetch_upstream(self, branchname):
         self.fetch_upstream_cmd.append(str(branchname))
         print(self.fetch_upstream_cmd)
         op = self.run_process(self.fetch_upstream_cmd)

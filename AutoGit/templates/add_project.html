@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+
+<br><br>
+<div class="container w-50" >
+
+
+    <center>
+        <h2>
+            Project Details
+            <br><br>
+        </h2>
+    </center>
+
+    <form>
+
+        <div class="form-group">
+          <input type="email" class="form-control" id="title"  placeholder="Title" required>
+
+        </div>
+
+        <br><br>
+
+        <div class="form-group">
+            <input type="email" class="form-control" id="directory"  placeholder="Directory" required>
+
+          </div>
+
+          <br><br>
+
+        <div class="form-group">
+            <input type="email" class="form-control" id="branch" placeholder="Branch" required>
+
+          </div>
+
+          <br><br>
+
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="default" >
+          <label class="form-check-label" for="exampleCheck1">Default branch</label>
+        </div>
+
+        <br><br>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+
+      </form>
+</div>
+
+
+<script>
+
+
+
+    var submitBtn = document.querySelector('#submit-btn')
+
+    $('#submit-btn').on('click',function(event){
+
+
+        event.preventDefault();
+
+        var title = document.querySelector("#title").value
+        var directory = document.querySelector("#directory").value
+        var branch = document.querySelector("#branch").value
+        var defaultBranch = document.querySelector("#default").checked
+
+        submitBtn.disabled = true
+        submitBtn.textContent = "Adding Project.."
+
+        console.log(title," ",directory," ",branch," ",defaultBranch);
+        add_project(title, directory, branch, defaultBranch)
+        title=''
+        directory=''
+        branch=''
+        defaultBranch=''
+
+        console.log(title," ",directory," ",branch," ",defaultBranch);
+
+    })
+
+
+    function add_project(title, directory, branch, defaultBranch) {
+
+        $.ajax({
+            headers: { "X-CSRFToken": '{{csrf_token}}' },
+            url: "{% url 'add-project' %}",
+            type: "POST",
+            data: {
+                title:title,
+                directory:directory,
+                branch_name:branch,
+                default:defaultBranch
+            },
+
+            success: function (json) {
+                console.log(json);
+                location.href = "{% url 'home' %}"
+            },
+            error: function (xhr, errmsg, err) {
+                console.log("Error!")
+                console.log(xhr.status + ":" + xhr.responseText)
+            }
+
+        })
+
+    }
+
+</script>
+
+
+
+
+
+
+{% endblock content %}
